@@ -8,7 +8,6 @@
 
 4.a good looking UI
 
-5.a controllable progressbar
 # How To Use:
 1.Install Amarillo font from here:-https://www.dafont.com/amarillo.font#null
 
