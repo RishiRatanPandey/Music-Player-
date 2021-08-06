@@ -1,1 +1,27 @@
-
+from tkinter.ttk import*
+from tkinter import mainloop,Button,HORIZONTAL,Scale,Listbox,ACTIVE
+from ttkthemes import ThemedTk
+root=ThemedTk(themebg=True)
+root.set_theme('black')
+root.geometry('800x600')
+prev=Button(root,text='Prev',font=('Arial',20,'bold'),fg='white',bg='#3C3C3C',activeforeground='white',activebackground='#3C3C3C')
+prev.place(y=500,x=231)
+play=Button(root,text='Play',font=('Arial',20,'bold'),fg='white',bg='#3C3C3C',activeforeground='white',activebackground='#3C3C3C')
+play.place(y=500,x=350)
+next1=Button(root,text='Next',font=('Arial',20,'bold'),fg='white',bg='#3C3C3C',activeforeground='white',activebackground='#3C3C3C')
+next1.place(y=500,x=330+130)
+progressbar=Progressbar(root,length=545)
+progressbar.start(10)
+progressbar.place(x=1,y=465)
+volume_indict_=Label(root,text='Volume:',font=('Arial',15,'bold'))
+volume_indict_.place(y=500)
+volume=Scale(root,from_=0,to=10,orient=HORIZONTAL,tickinterval=2,background='#3C3C3C',fg='white',activebackground='#3C3C3C')
+volume.place(y=530,x=1)
+lyrics_indict=Label(root,text='Lyrics',font=('Arial',20,'bold'))
+lyrics_indict.place(x=400)
+lyrics=Listbox(root,bg='#3C3C3C',width=60,fg='orange',font=('Arial',12,'bold'))
+lyrics.place(x=1,y=200)
+lyrics.insert(0,"Ha Ha Yeah BBC follow me Bounce like this eh eh")
+play_list=Listbox(root,width=35)
+play_list.place(x=465)
+mainloop()
