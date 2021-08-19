@@ -1,12 +1,11 @@
 from tkinter.ttk import*
 import shutil
 from tkinter import simpledialog
-import pathlib
-from tkinter import PhotoImage,mainloop,StringVar,Button,HORIZONTAL,Scale,Listbox,ACTIVE,Menu,END,filedialog,Toplevel
+from tkinter import dialog#plz import!
+from tkinter import PhotoImage,mainloop,Entry,StringVar,Button,HORIZONTAL,Scale,Listbox,ACTIVE,Menu,END,filedialog,Toplevel
 from ttkthemes import ThemedTk
 import os
 import pygame
-import threading
 from tkinter import messagebox
 root=ThemedTk(themebg=True)
 root.title('Playlist- Default')
@@ -16,6 +15,97 @@ song_Data=StringVar()
 val12=0
 check=False
 has=False
+val=0
+file=''
+times_playlist_created=0
+your_playlist=[]
+names=[]
+c=[]
+check1000='NOPE!'
+times_called=0
+def check_this_bitch():
+	print(path1)
+def save_name():# healteh bar
+	global path1,play_list_name
+	if name.get()=='':
+		pass
+	else:
+		r=list_.get(ACTIVE)
+		pos=r.index(r)
+		names[pos]=name.get()
+		for i in names:
+		    old=path1[path1.rfind('\\')+1:len(path1)]
+		    returned_string=(path1.replace(old,i))
+		    Named_to_be=path1.rfind('\\')
+		    print(path1[:Named_to_be:]+name.get())
+		    
+		    os.rename(your_playlist[pos],path1[:Named_to_be:]+"\\"+name.get())#root.title()
+
+		    
+		    path1=''
+		    path1+=returned_string
+		    play_list_name=''
+		    play_list_name+=returned_string
+		    c.append(returned_string)
+
+		    your_playlist[pos]=returned_string
+		list_.delete(pos)
+		name12=path1[path1.rfind('\\')+1:len(path1)]
+		
+		if root.title()=='Playlist- Default':
+			boyaah=path1[:Named_to_be:]+"\\"+name.get()
+			print('yo!1')
+			plist_.insert(pos,f'{name12} - {boyaah}')
+		if root.title()!='Playlist- Default':
+			print('yo!2')
+			boyaah=path1[:Named_to_be:]+"\\"+name.get()
+			root.title(f'Playlist - {boyaah}')
+			play_List_indict['text']=f'Playlist - {boyaah}'
+
+			list_.insert(pos,f'{name12} - {boyaah}')
+
+		t3.destroy()# create a fun fact option option when user lose in my pygame game!! boi!sssk
+def edit():#entry config font
+	global name,t3
+
+	t3=Toplevel()
+	t3.title('Edit')
+	t3.config(bg='#3C3C3C')
+	edit_label=Label(t3,text='Edit Playlist Name Here:',font=('Arial',25,'bold')).pack()
+	name=Entry(t3,bg='#3C3C3C',fg='yellow',font=('Arial Rounded MT bold',14,'bold'))
+	name.pack()
+	done=Button(t3,text='Done',font=('Arial',20,'bold'),fg='white',bg='#3C3C3C',activeforeground='white',activebackground='#3C3C3C',command=save_name)
+	done.pack()
+def question1(dedo):
+	d = dialog.Dialog(None, {'title': 'Question',
+                      'text':'Which Type Of Task You Want To Do In This Selected Playlist'.title(),
+                      'bitmap': dialog.DIALOG_ICON,
+                      'default': 'None',
+                      'strings': ('Open',
+                                  'Edit Name',
+                                  'None')})
+	if d.num==0:
+		pass
+	if d.num==1:
+		edit()
+	if d.num==2:
+		pass
+def Savee():
+	global check1000
+	check1000='YUP!'
+	
+def show_user_own_playlist():
+	global list_,times_called,t1
+	t1=Toplevel()
+	t1.config(bg='#3C3C3C')
+	t1.title("Your Created Playlists Are Here!")
+	t2=Label(t1,text='Here Is The List Of Playlist You Created:',font=('Arial Rounded MT bold',25,'bold'))
+	t2.pack()
+	list_=Listbox(t1,width=32,bg="#3C3C3C",fg='cyan',font=('Arial',17,'bold'))
+	list_.pack()
+	pyaar=0
+	list_.insert()
+	list_.bind('<Double-Button>',question1)
 def CLOSE():
 	pygame.mixer.music.stop()
 	exit()
@@ -23,6 +113,11 @@ root.protocol('WM_DELETE_WINDOW',CLOSE)
 open_dir_paths=[]
 play_ing_song_name=[]
 pygame.mixer.init()
+def active_all():
+	play['state']='active'
+	prev['state']='active'
+	next1['state']='active'
+	stop['state']='active'
 def _add_folder():
 	global dir_name,open_dir_paths,mp3_wav_ogg,val,folder_name
 	dir_name=filedialog.askdirectory()
@@ -30,26 +125,17 @@ def _add_folder():
 	good_boiii=[]
 	mp3_wav_ogg=os.listdir(dir_name)
 	val=0
-
-	folder_name=(dir_name[dir_name.rfind('/')+1:len(dir_name)])
-	play_List_indict.config(text=f'Playlist - {folder_name}')
+	play_List_indict.config(text=f'Playlist - {dir_name}')
 	for x in mp3_wav_ogg:
 		if str(x).endswith('.mp3') or str(x).endswith('.wav') or str(x).endswith('.ogg'):
 			play_list.insert(val,x)
 			val+=1
-	if check==False:
-		root.title(f'Playlist- {folder_name}')
-		play['state']='active'
-		prev['state']='active'
-		next1['state']='active'
-		stop['state']='active'
-	if check==True:
-		pass
 def upause():
 	pygame.mixer.music.unpause()
 	play['image']=pause_image
-
 	play['command']=pause
+	playing_label['text']='Paused - '+play_list.get(ACTIVE)
+
 	play.place(y=500,x=340)
 def pause():
 	pygame.mixer.music.pause()
@@ -61,10 +147,7 @@ def pause():
 
 def play_the_song():
 	global is_playing
-	play['state']='active'
-	prev['state']='active'
-	next1['state']='active'
-	stop['state']='active'
+	active_all()
 	play['image']=pause_image
 
 	try:
@@ -100,7 +183,7 @@ def play_the_song():
 hmm=0
 hmm12=0
 def set_volume1(self):
-	pygame.mixer.music.set_volume(volume.get())
+	pygame.mixer.music.set_volume(float(volume.get()) /100)
 def prev_song():
 	global posxD1,hmm12
 	a123=play_list.get(0,'end')
@@ -150,6 +233,8 @@ def play_the_song_for_own_playlist_with_button():
 	play['image']=pause_image
 	if play['image']==pause_image:
 		pause()
+		playing_label['text']='Paused - '+play_list.get(ACTIVE)
+
 	else:
 		upause()
 		play.place(x=340,y=500)
@@ -161,6 +246,7 @@ def play_the_song_for_own_playlist(head_ahce):
 	playing_label['text']='Playing - '+play_list.get(ACTIVE)
 	play['image']=pause_image
 	if play['image']==pause_image:
+		playing_label['text']='Paused - '+play_list.get(ACTIVE)
 		pause()
 	else:
 		upause()
@@ -168,19 +254,23 @@ def play_the_song_for_own_playlist(head_ahce):
 
 def add_song1():
 	global dir_name,open_dir_paths,mp3_wav_ogg,val,val12,folder_name
-	dir_name12=filedialog.askopenfilename()
+	dir_name123=filedialog.askopenfilename()
 	times_called=0
 	open_dir_paths12=[]
-	open_dir_paths12.append(dir_name12)
+	open_dir_paths12.append(dir_name123)
 	for x in open_dir_paths12:
 		if str(x).endswith('.mp3') or str(x).endswith('.wav') or str(x).endswith('.ogg'):
 			play_list.insert(val12,x[x.rfind('/')+1:len(x)])
 			val12+=1
 			shutil.copyfile(x,path1+'\\'+x[x.rfind('/')+1:len(x)]) 
 			play_list.delete(val12+1)
+		if play_list.get(0)!='':
+			active_all()
+		else:
+			pass
 	file.entryconfig(0,command=add_song1)
 	play['command']=play_the_song_for_own_playlist_with_button
-	play_List_indict['text']=f'Playlist - {play_list_name}'
+	# play_List_indict['text']=f'Playlist - {play_list_name}'
 def next_song():
 	#########Next################
 	global posxD,posxD,pos,B,hmm,xd_bop
@@ -232,17 +322,30 @@ def Play_The_Slected_Song(BTS_IS_MY_FAV_KPOP_GROUP_AND_EXO_ALSO_AND_STRAY_KIDS_A
 					print(5+'fff')
 
 				except:
-					pygame.mixer.music.stop()
-					pygame.mixer.music.load(dir_name.replace('/','\\')+'\\'+play_list.get(ACTIVE))
-					pygame.mixer.music.play()
+					try:
+						pygame.mixer.music.stop()
+						pygame.mixer.music.load(dir_name.replace('/','\\')+'\\'+play_list.get(ACTIVE))
+						pygame.mixer.music.play()
+					except:
+						pass
 			except Exception as e: 
 				messagebox.showinfo('Error','Error Occured!')
 				raise e
 	except Exception as r1:
 		raise r1
-	pygame.mixer.music.stop()
-	pygame.mixer.music.load(path1+'\\'+play_list.get(ACTIVE))
-	pygame.mixer.music.play()
+	try:
+		pygame.mixer.music.stop()
+		pygame.mixer.music.load(path1+'\\'+play_list.get(ACTIVE))
+		pygame.mixer.music.play()
+
+	except:
+		print('I WORKED!')
+		pygame.mixer.music.stop()
+		try:
+			pygame.mixer.music.load(dir_name+'\\'+play_list.get(ACTIVE))
+			pygame.mixer.music.play()
+		except:
+			print('I WORKED!')
 
 	playing_label['text']='Playing - '+play_list.get(ACTIVE)
 	play['image']=pause_image
@@ -259,7 +362,7 @@ def stop():
 	playing_label['text']=''
 	play.place(y=500,x=350)
 def del_playlist():
-	question=messagebox.askquestion('Info!!','Are You Sure To Clear Playlist It Will Delete The Playlist!')#rip me!
+	question=messagebox.askquestion('Info!!','Are Your Sure To Clear Playlist It Will Delete The Playlist!')#rip me!
 	pygame.mixer.music.stop()
 	playing_label['text']=''
 	play_List_indict['text']='Playlist'
@@ -272,67 +375,78 @@ def del_playlist():
 	play_list.delete(0,'end')
 	files=os.listdir(path1)
 	for i in files:
+		print('Deleting...')
 		os.remove(path1+'\\'+i)
-
+	print('Playlist Deleted!')
 def show_created_window_playlist():
-	root.title(f'Playlist- {play_list_name}')
+	root.title(f'Playlist- {path1}')
 	play_list.delete(0,'end')
 	playing_label['text']=''
 	pygame.mixer.music.stop()
-	play_List_indict['text']=f'Playlist- {play_list_name}'
+	play_List_indict['text']=f'Playlist- {path1}'
 	add_song['text']='Add song'
 	add_song['command']=add_song1
-	play['state']='active'
-	prev['state']='active'
-	next1['state']='active'
-	stop['state']='active'
-
 def ask_dir_name_to_save():
-	global check,path1
+	global check,path1,dir_name12
 	check=True
-	dir_name=simpledialog.askstring("Enter Path To Save The Playlist.",prompt='Enter Path To Save The Playlist.')
-	while True:
-		if len(dir_name)<=0:
-			ask_dir_name_to_save()
-			has=False
-		else:
-			path1=dir_name+play_list_name.replace('/','/')
-			
-			os.mkdir(path1)#entry config config the item in a menu.
-			show_created_window_playlist()
-			messagebox.showinfo("Info",'Playlist Created Successfully!')
+	dir_name12=simpledialog.askstring("Enter Path To Save The Playlist.",prompt='Enter Path To Save The Playlist.')
+	while check:
+		if dir_name12==None:
 			break
+		if len(dir_name12)<=0:
+			ask_dir_name_to_save()
+		else:
+			path1=dir_name12+play_list_name.replace('\\','\\')
+			try:
+				os.mkdir(path1)
+				your_playlist.append(path1)
+
+			except OSError:
+				your_playlist.clear()
+				ask_dir_name_to_save()
+			show_created_window_playlist()
+			# messagebox.showinfo('Info','Playlist Created Successfully!!')
+			break 
 def create_playlist():
-	global play_list_name
+	global play_list_name,Looping
 	Looping=True
-	play_list_name=simpledialog.askstring("Enter You Playlist Name",prompt='Enter Your Playlist Name.')
-	play_list_name1=play_list_name
+	play_list_name=simpledialog.askstring("Enter Your Playlist Name",prompt='Enter Your Playlist Name.')
+	
 	while True:
 		try:
-			if len(play_list_name)<=0:
-				create_playlist()
-
-			else:
-				messagebox.showinfo("Info",'Playlist Named Successfully!')
-				ask_dir_name_to_save()
+			if play_list_name==None:
 				break
-				raise ValueError('The Error Occurs Because The While Loop Need To Be Stopped!! Sorry, For Your Incovience ):')
-		except:
+			try:
+				if len(play_list_name)<=0:
+					create_playlist()
+
+				else:
+					messagebox.showinfo("Info",'Playlist Named Successfully!')
+					if play_list_name.count('/') or play_list_name.count('\\') or play_list_name.count('<') or play_list_name.count('>') or play_list_name.count('''"''') or play_list_name.count('?') or play_list_name.count('*') or play_list_name.count(':') or play_list_name.count('|'): #/\ <> " ? * : |
+						messagebox.showinfo('Info!!','Your Playlist Name Cannot Contains These Charecters:- /\ <> " ? * : | ')
+						create_playlist()
+					else:
+						names.append(play_list_name)
+						ask_dir_name_to_save()
+						break
+			except Exception as test1000:
+				raise test1000
 				create_playlist()
-
-
-			
-
+		except Exception as test:
+			raise test
+			create_playlist()
 def open_single_file():
+	global file_name
 	file_name=filedialog.askopenfilename()
 	if str(file_name).endswith('.mp3') or str(file_name).endswith('.wav') or str(file_name).endswith('.ogg'):
-		opened_file_name=file_name.name[file_name.name.rfind('/')+1:len(file_name)]
+		opened_file_name=file_name[file_name.rfind('/')+1:len(file_name)]
 		try:
 			play_list.insert(val+1,opened_file_name)# ide that set the prtioty of a vairable  like the varaible name is file_name but ide is suggeted file varioable but i need file_name variable
 			messagebox.showinfo('Info',f'{opened_file_name} Added To {folder_name} Playlist')
 		except:
-			play_list.insert(pos+1,opened_file_name)
+			play_list.insert(val+1,opened_file_name)
 		open_dir_paths.append(opened_file_name)
+
 prev_image=PhotoImage(file='previous.png')
 play_image=PhotoImage(file='play.png')
 next_image=PhotoImage(file='next.png')
@@ -345,8 +459,7 @@ play.place(y=500,x=350)
 next1=Button(root,image=next_image,font=('Arial',20,'bold'),fg='white',bg='#3C3C3C',activeforeground='white',activebackground='#3C3C3C',command=next_song,state='disabled')
 next1.place(y=500,x=330+130)
 stop=Button(root,text='Stop',font=('Arial',20,'bold'),fg='white',bg='#3C3C3C',activeforeground='white',activebackground='#3C3C3C',command=stop,state='disabled')
-stop.place(y=570,x=347)
- # we can increase image size in tkinter by chaing the font size!!,entry conifg,#image creator like a person need a image of cat he/she write the requirment of image like i want a image in black color blue eyes etc.
+stop.place(y=570,x=347)# we can increase image size in tkinter by chaing the font size!!,entry conifg,#image creator like a person need a image of cat he/she write the requirment of image like i want a image in black color blue eyes etc.
 progressbar=Progressbar(root,length=545)
 progressbar.start(10)
 progressbar.place(x=1,y=465)
@@ -376,7 +489,7 @@ file.add_command(label="Open Media",command=open_single_file)
 file.add_command(label="Create Playlist",command=create_playlist)  
 file.add_command(label="Recent Media")  
 file.add_command(label="Recent Playlist")  
-file.add_command(label="Your Playlists")  
+file.add_command(label="Your Playlists",command=show_user_own_playlist)  
 menubar.add_cascade(label="File", menu=file) 
 root.config(menu=menubar)
 # filepath and player vs player.!
@@ -454,7 +567,7 @@ mainloop()
 #     selected_indices = listbox.curselection()
 #     # get selected items
 #     selected_langs = ",".join([listbox.get(i) for i in selected_indices])
-#     msg = f'You selected: {selected_langs}'
+#     msg = f'Your selected: {selected_langs}'
 
 #     showinfo(
 #         title='Information',
