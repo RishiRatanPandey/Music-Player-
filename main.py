@@ -23,15 +23,24 @@ names=[]
 c=[]
 check1000='NOPE!'
 times_called=0
-def check_this_bitch():
-	print(path1)
+Recent_Media=[]
+Recent_Playlist=[]
+timessss12=0
+def open__():
+	Named_to_be=path1.rfind('\\')
+	print(os.listdir(path1))
+	if list_.get(ACTIVE)==root.title()[13::]:
+		messagebox.showinfo('Info','Playlist Is Opened! In The App!!')
+	else:
+		pass#p;z@
 def save_name():# healteh bar
-	global path1,play_list_name
+	global path1,play_list_name,name,timessss12
 	if name.get()=='':
 		pass
 	else:
-		r=list_.get(ACTIVE)
-		pos=r.index(r)
+		r=list(list_.get(0,END))
+		pos=r.index(list_.get(ACTIVE))
+		print(list_.get(ACTIVE))
 		names[pos]=name.get()
 		for i in names:
 		    old=path1[path1.rfind('\\')+1:len(path1)]
@@ -39,7 +48,6 @@ def save_name():# healteh bar
 		    Named_to_be=path1.rfind('\\')
 		    print(path1[:Named_to_be:]+name.get())
 		    
-		    os.rename(your_playlist[pos],path1[:Named_to_be:]+"\\"+name.get())#root.title()
 
 		    
 		    path1=''
@@ -49,22 +57,30 @@ def save_name():# healteh bar
 		    c.append(returned_string)
 
 		    your_playlist[pos]=returned_string
-		list_.delete(pos)
 		name12=path1[path1.rfind('\\')+1:len(path1)]
 		
 		if root.title()=='Playlist- Default':
 			boyaah=path1[:Named_to_be:]+"\\"+name.get()
-			print('yo!1')
-			plist_.insert(pos,f'{name12} - {boyaah}')
+			os.rename(boyaah,path1[:Named_to_be:]+"\\"+name.get())#root.title()
 		if root.title()!='Playlist- Default':
 			print('yo!2')
 			boyaah=path1[:Named_to_be:]+"\\"+name.get()
 			root.title(f'Playlist - {boyaah}')
+			os.rename(path1[:Named_to_be:]+"\\"+F'{list_.get(ACTIVE)}',path1[:Named_to_be:]+"\\"+name.get())#root.title()
 			play_List_indict['text']=f'Playlist - {boyaah}'
+			Recentmenu.entryconfig(timessss12,label=boyaah)
 
-			list_.insert(pos,f'{name12} - {boyaah}')
+		lisst=[]
+		x1254=0
+		list_.delete(pos)
+		list_.insert(pos,names[pos])
+		x1254+=1
+		lisst.append(list_.get(0,END))
+		Recentmenu.entryconfig(pos,label=play_List_indict['text'])
+		timessss12+=1
 
 		t3.destroy()# create a fun fact option option when user lose in my pygame game!! boi!sssk
+
 def edit():#entry config font
 	global name,t3
 
@@ -78,14 +94,14 @@ def edit():#entry config font
 	done.pack()
 def question1(dedo):
 	d = dialog.Dialog(None, {'title': 'Question',
-                      'text':'Which Type Of Task You Want To Do In This Selected Playlist'.title(),
-                      'bitmap': dialog.DIALOG_ICON,
-                      'default': 'None',
-                      'strings': ('Open',
-                                  'Edit Name',
-                                  'None')})
+    'text':'Which Type Of Task You Want To Do In This Selected Playlist'.title(),
+    'bitmap': dialog.DIALOG_ICON,
+    'default': 'None',
+    'strings': ('Open',
+    'Edit Name',
+    'Delete!')})
 	if d.num==0:
-		pass
+		open__()
 	if d.num==1:
 		edit()
 	if d.num==2:
@@ -103,8 +119,16 @@ def show_user_own_playlist():
 	t2.pack()
 	list_=Listbox(t1,width=32,bg="#3C3C3C",fg='cyan',font=('Arial',17,'bold'))
 	list_.pack()
-	pyaar=0
-	list_.insert()
+	x124=0
+	lisst=[]
+	for i1 in names:
+		list_.insert(x124,i1)
+		lisst.append(list_.get(0,END))
+		print(lisst)
+		
+		x124+=1
+
+
 	list_.bind('<Double-Button>',question1)
 def CLOSE():
 	pygame.mixer.music.stop()
@@ -380,15 +404,19 @@ def del_playlist():
 	print('Playlist Deleted!')
 def show_created_window_playlist():
 	root.title(f'Playlist- {path1}')
+
 	play_list.delete(0,'end')
 	playing_label['text']=''
 	pygame.mixer.music.stop()
 	play_List_indict['text']=f'Playlist- {path1}'
+	Recentmenu.add_command(label=play_List_indict['text'])
+
 	add_song['text']='Add song'
 	add_song['command']=add_song1
 def ask_dir_name_to_save():
 	global check,path1,dir_name12
 	check=True
+	timessss=0
 	dir_name12=simpledialog.askstring("Enter Path To Save The Playlist.",prompt='Enter Path To Save The Playlist.')
 	while check:
 		if dir_name12==None:
@@ -400,7 +428,7 @@ def ask_dir_name_to_save():
 			try:
 				os.mkdir(path1)
 				your_playlist.append(path1)
-
+				timessss+=1
 			except OSError:
 				your_playlist.clear()
 				ask_dir_name_to_save()
@@ -484,11 +512,13 @@ playing_label.place(x=1,y=425)
 clear=Button(root,text='Clear Playlist',font=('Arial',20,'bold'),fg='white',bg='#3C3C3C',activeforeground='white',activebackground='#3C3C3C',command=del_playlist)
 clear.place(x=545,y=350)
 menubar = Menu(root)  
+Recentmenu=Menu(root,tearoff=0)
 file = Menu(menubar, tearoff=0)  
 file.add_command(label="Open Media",command=open_single_file)  
 file.add_command(label="Create Playlist",command=create_playlist)  
-file.add_command(label="Recent Media")  
-file.add_command(label="Recent Playlist")  
+file.add_cascade(label="Recent", menu=Recentmenu)
+for name in names:
+     Recentmenu.add_command(label=name)
 file.add_command(label="Your Playlists",command=show_user_own_playlist)  
 menubar.add_cascade(label="File", menu=file) 
 root.config(menu=menubar)
